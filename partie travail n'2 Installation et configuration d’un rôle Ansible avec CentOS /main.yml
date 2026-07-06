@@ -1,0 +1,24 @@
+- name: Installer chrony si nécessaire
+  package:
+    name: chrony
+    state: present
+
+- name: Stopper le service chrony
+  service:
+    name: chronyd
+    state: stopped
+  ignore_errors: yes
+
+- name: Déployer le fichier chrony.conf
+  copy:
+    src: chrony.conf
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Redémarrer chrony
+
+- name: Démarrer chrony
+  service:
+    name: chronyd
+    state: started
